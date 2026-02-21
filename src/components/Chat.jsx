@@ -207,7 +207,7 @@ function Chat() {
         )}
 
         <div className="min-h-0 flex-1">
-          <Detail chat={selectedChat} isMobile />
+          <Detail chat={selectedChat} />
         </div>
       </div>
 

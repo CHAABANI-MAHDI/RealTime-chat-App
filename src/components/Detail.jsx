@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function Detail({ chat, isMobile = false }) {
+function Detail({ chat }) {
   const [isInfoOpen, setIsInfoOpen] = useState(false);
 
   useEffect(() => {
