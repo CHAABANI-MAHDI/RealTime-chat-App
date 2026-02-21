@@ -1,13 +1,22 @@
 import { useEffect, useState } from "react";
+import EmojiPicker from "emoji-picker-react";
 
 function Detail({ chat }) {
   // Feature: info panel toggle state
   const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [messageText, setMessageText] = useState("");
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
 
   // Feature: reset info panel on chat change
   useEffect(() => {
     setIsInfoOpen(false);
+    setMessageText("");
+    setIsEmojiPickerOpen(false);
   }, [chat?.id]);
+
+  const handleEmojiSelect = (emojiData) => {
+    setMessageText((previous) => `${previous}${emojiData.emoji}`);
+  };
 
   // Feature: empty chat placeholder
   if (!chat) {
@@ -24,7 +33,7 @@ function Detail({ chat }) {
   const messagesContent = (
     <>
       {/* Feature: message bubbles */}
-      <div className="flex-1 space-y-3 overflow-y-auto rounded-xl border border-white/15 bg-black/20 p-3 md:p-4">
+      <div className="flex-1 space-y-3 overflow-y-auto rounded-2xl border border-white/15 bg-black/20 p-3 md:p-4">
         {chat.messages.map((message) => (
           <div
             key={message.id}
@@ -54,11 +63,11 @@ function Detail({ chat }) {
       </div>
 
       {/* Feature: typing and actions row */}
-      <div className="mt-4 flex items-center gap-2 rounded-xl border border-white/20 bg-white/12 p-2">
+      <div className="relative mt-4 flex items-center gap-2 rounded-2xl border border-white/20 bg-white/12 p-2">
         <button
           type="button"
           title="Send image"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/20 bg-white/10 text-white/90 transition-colors hover:bg-white/15"
+          className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/20 bg-white/10 text-white/90 transition-colors hover:bg-white/15 sm:flex"
         >
           <svg
             className="h-4 w-4"
@@ -78,7 +87,7 @@ function Detail({ chat }) {
         <button
           type="button"
           title="Open camera"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/20 bg-white/10 text-white/90 transition-colors hover:bg-white/15"
+          className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/20 bg-white/10 text-white/90 transition-colors hover:bg-white/15 md:flex"
         >
           <svg
             className="h-4 w-4"
@@ -98,7 +107,7 @@ function Detail({ chat }) {
         <button
           type="button"
           title="Send voice message"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/20 bg-white/10 text-white/90 transition-colors hover:bg-white/15"
+          className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/20 bg-white/10 text-white/90 transition-colors hover:bg-white/15 md:flex"
         >
           <svg
             className="h-4 w-4"
@@ -118,12 +127,14 @@ function Detail({ chat }) {
         <input
           type="text"
           placeholder="Type your message..."
-          className="flex-1 rounded-lg bg-black/20 px-3 py-2 text-sm text-white placeholder:text-white/70 outline-none"
-          readOnly
+          value={messageText}
+          onChange={(event) => setMessageText(event.target.value)}
+          className="flex-1 rounded-xl bg-black/20 px-3 py-2 text-sm text-white placeholder:text-white/70 outline-none"
         />
         <button
           type="button"
           title="Add sticker"
+          onClick={() => setIsEmojiPickerOpen((previous) => !previous)}
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/20 bg-white/10 text-white/90 transition-colors hover:bg-white/15"
         >
           <svg
@@ -148,17 +159,36 @@ function Detail({ chat }) {
         </button>
         <button
           type="button"
+          onClick={() => {
+            setMessageText("");
+            setIsEmojiPickerOpen(false);
+          }}
           className="rounded-lg bg-[#5e8b5a]/85 px-4 py-2 text-sm font-medium text-white hover:bg-[#5e8b5a]"
         >
           Send
         </button>
+
+        {isEmojiPickerOpen && (
+          <div className="emoji-picker-theme absolute bottom-14 right-2 z-20 overflow-hidden rounded-2xl border border-white/20 shadow-2xl">
+            <EmojiPicker
+              onEmojiClick={handleEmojiSelect}
+              width={360}
+              height={460}
+              theme="dark"
+              lazyLoadEmojis
+            />
+          </div>
+        )}
       </div>
+      <p className="mt-2 px-1 text-[11px] text-white/65 md:hidden">
+        Type your message, then tap Send.
+      </p>
     </>
   );
 
   // Feature: contact info panel
   const infoContent = (
-    <aside className="h-full overflow-y-auto rounded-xl border border-white/20 bg-white/12 p-4">
+    <aside className="h-full overflow-y-auto rounded-2xl border border-white/20 bg-white/12 p-4">
       <div className="mb-6 flex items-center gap-4">
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/30 text-2xl font-semibold text-white">
           {chat.avatar}
@@ -195,22 +225,22 @@ function Detail({ chat }) {
   );
 
   return (
-    <section className="flex h-full flex-1 flex-col bg-[#15261d]/65 p-3 md:p-4">
+    <section className="flex h-full flex-1 flex-col bg-[#15261d]/35 p-3 md:p-5">
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         {/* Feature: chat header */}
-        <header className="mb-4 flex flex-col gap-3 rounded-xl border border-white/20 bg-white/12 px-3 py-3 sm:flex-row sm:items-center sm:justify-between md:px-4">
+        <header className="mb-4 flex items-center justify-between gap-2 rounded-2xl border border-white/20 bg-white/12 px-4 py-3 md:px-5">
           <div className="flex min-w-0 items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/30 font-semibold text-white">
+            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/30 text-base font-semibold text-white">
               {chat.avatar}
             </div>
             <div className="min-w-0">
-              <h2 className="truncate text-lg font-semibold text-white">
+              <h2 className="truncate text-lg font-semibold tracking-tight text-white">
                 {chat.name}
               </h2>
               <p className="text-sm text-white/70">{chat.lastSeen}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 self-start sm:self-auto">
+          <div className="flex shrink-0 items-center gap-2">
             <button
               type="button"
               className="rounded-md border border-white/20 bg-white/10 px-2 py-1 text-xs text-white/90"
