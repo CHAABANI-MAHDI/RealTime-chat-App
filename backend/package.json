@@ -1,5 +1,5 @@
 {
-  "name": "chat-firebase-app-backend",
+  "name": "chatti-app-backend",
   "version": "1.0.0",
   "private": true,
   "main": "src/server.js",

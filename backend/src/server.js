@@ -13,7 +13,7 @@ app.use(express.json());
 app.get("/api/health", (_req, res) => {
   res.status(200).json({
     status: "ok",
-    service: "chat-firebase-app-backend",
+    service: "chatti-app-backend",
     timestamp: new Date().toISOString(),
   });
 });
