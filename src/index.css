@@ -30,7 +30,7 @@ body {
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  width: min(1100px, 92vw);
+  width: min(1320px, 96vw);
   height: min(760px, 90vh);
   display: flex;
 }
